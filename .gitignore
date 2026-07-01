@@ -27,3 +27,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Local environment files - DO NOT COMMIT
+.env
+.env.*
+!.env.example
