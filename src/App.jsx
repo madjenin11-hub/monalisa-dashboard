@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './pln-human-corporate.css';
 import { 
-  Activity, 
+Activity, 
   Database, 
   Users, 
   BarChart3, 
@@ -35,6 +34,8 @@ import {
   ChevronRight,
   User
 } from 'lucide-react';
+import './pln-human-corporate.css';
+import './pln-mobile-left-sidebar.css';
 
 // Master Customer Database (Jan - Dec Power Usage in kWh)
 const INITIAL_CUSTOMERS = [
