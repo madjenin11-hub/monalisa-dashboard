@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './pln-human-corporate.css';
 import { 
   Activity, 
   Database, 
@@ -150,102 +151,63 @@ const INITIAL_EDIT_LOGS = [
   { time: "2026-06-21 14:10:00", user: "Admin (Dian)", idpel: "141001728156", field: "daya", oldVal: "340,000 VA", newVal: "345,000 VA", source: "Dashboard" }
 ];
 
-// PLN Illustrative Theme: clean, glass, animated, but still corporate
+// PLN Human Corporate Theme: bersih, profesional, dan tidak terlalu AI
 const THEME = {
-  bgLight: "bg-[#EEF7FF] monalisa-energy-bg",
-  bgHeader: "bg-gradient-to-r from-[#061A33] via-[#0072CE] to-[#00AEEF]",
-  bgSidebar: "bg-white/90 backdrop-blur-xl",
-  borderLight: "border-sky-100",
-  textDark: "text-[#0B1F3A]",
-  textSecondary: "text-[#64748B]",
+  bgLight: "bg-[#F5F8FC]",
+  bgHeader: "bg-[#073B75]",
+  bgSidebar: "bg-white",
+  borderLight: "border-slate-200",
+  textDark: "text-[#172033]",
+  textSecondary: "text-[#667085]",
   plnBlue: "#0072CE",
   plnBlueText: "text-[#0072CE]",
-  cyanAccent: "#00AEEF",
-  yellowAccent: "#FFD100",
-  yellowText: "text-[#FFD100]",
-  emeraldAccent: "#00B686"
+  goldAccent: "#F2C94C",
+  goldText: "text-[#B7791F]"
 };
 
 // Helper function to render official PLN logo image verbatim
-// Simpan logo PLN di public/pln-logo.svg atau public/pln-logo.png.
-const PLNLogo = ({ className = "h-8 w-auto" }) => (
-  <img
-    src="/pln-logo.svg"
-    onError={(e) => { e.currentTarget.src = "/pln-logo.png"; }}
-    alt="PLN Logo"
-    className={`${className} object-contain drop-shadow-sm`}
-  />
-);
-
-const EnergyHero = ({ currentUser, currentTime, customers, queryLogs, errorLogs }) => {
-  const activeErrors = errorLogs.filter((item) => item.status !== "Selesai").length;
+const PLNLogo = ({ className = "h-8 w-auto" }) => {
+  const logoPath = `${import.meta.env.BASE_URL || "/"}pln-logo.svg`;
 
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-white/60 bg-gradient-to-br from-[#061A33] via-[#0072CE] to-[#00AEEF] p-6 shadow-[0_24px_80px_rgba(0,114,206,0.22)] text-white monalisa-fade-up">
-      <div className="absolute inset-0 opacity-25 monalisa-grid-pattern" />
-      <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-[#FFD100]/25 blur-3xl monalisa-float" />
-      <div className="absolute right-8 bottom-2 h-44 w-44 rounded-full bg-white/15 blur-2xl monalisa-float-reverse" />
+    <span className="pln-logo-safe" aria-label="PLN">
+      <img
+        src={logoPath}
+        alt="PLN MONA LISA Logo"
+        className={`${className} object-contain pln-logo-safe__img`}
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.style.display = "none";
+          const fallback = e.currentTarget.parentElement?.querySelector(".pln-logo-safe__fallback");
+          if (fallback) fallback.style.display = "inline-flex";
+        }}
+      />
+      <span className="pln-logo-safe__fallback">PLN</span>
+    </span>
+  );
+};
 
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        <div className="lg:col-span-7">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="rounded-2xl bg-white p-2.5 shadow-lg shadow-black/10">
-              <PLNLogo className="h-10 w-auto" />
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.28em] text-white/75 font-semibold">PLN Digital Monitoring</p>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">MONA LISA AI Dashboard</h2>
-            </div>
-          </div>
 
-          <p className="max-w-2xl text-sm leading-6 text-white/82">
-            Monitoring pemakaian energi, request WhatsApp, audit log, grafik pelanggan, dan analisis AI dalam satu panel operasional yang lebih visual, interaktif, dan tetap beridentitas PLN.
-          </p>
 
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-            <div className="rounded-2xl bg-white/12 backdrop-blur-md border border-white/15 p-3 monalisa-hover-lift">
-              <p className="text-white/60">Pelanggan</p>
-              <p className="mt-1 text-xl font-bold">{customers.length}</p>
-            </div>
-            <div className="rounded-2xl bg-white/12 backdrop-blur-md border border-white/15 p-3 monalisa-hover-lift">
-              <p className="text-white/60">Request WA</p>
-              <p className="mt-1 text-xl font-bold">{queryLogs.length}</p>
-            </div>
-            <div className="rounded-2xl bg-white/12 backdrop-blur-md border border-white/15 p-3 monalisa-hover-lift">
-              <p className="text-white/60">Pending Error</p>
-              <p className="mt-1 text-xl font-bold">{activeErrors}</p>
-            </div>
-            <div className="rounded-2xl bg-[#FFD100]/95 text-[#061A33] p-3 shadow-lg monalisa-hover-lift">
-              <p className="text-[#061A33]/65">Waktu</p>
-              <p className="mt-1 text-sm font-bold font-sans">{currentTime} WIB</p>
-            </div>
-          </div>
-        </div>
+const CorporateStatusStrip = ({ customers, queryLogs, waChartLogs, errorLogs, currentTime }) => {
+  const partialData = customers.filter((c) => Object.values(c).includes(null)).length;
+  const pendingErrors = errorLogs.filter((item) => item.status !== "Selesai").length;
 
-        <div className="lg:col-span-5 relative min-h-[240px] flex items-center justify-center">
-          <div className="relative h-56 w-56 rounded-full bg-white/10 border border-white/20 flex items-center justify-center monalisa-orbit">
-            <div className="absolute inset-7 rounded-full border border-dashed border-[#FFD100]/60" />
-            <div className="absolute h-32 w-32 rounded-full bg-white/15 blur-xl" />
-            <svg viewBox="0 0 220 220" className="relative h-52 w-52">
-              <defs>
-                <linearGradient id="plnEnergyStroke" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#FFD100" />
-                  <stop offset="55%" stopColor="#FFFFFF" />
-                  <stop offset="100%" stopColor="#00E5FF" />
-                </linearGradient>
-              </defs>
-              <path d="M45 128 C70 62, 134 56, 162 92 C191 128, 158 176, 106 166 C72 160, 62 141, 45 128Z" fill="rgba(255,255,255,0.12)" stroke="url(#plnEnergyStroke)" strokeWidth="3" className="monalisa-draw" />
-              <path d="M115 42 L78 120 H112 L96 178 L154 94 H118 Z" fill="#FFD100" opacity="0.95" className="monalisa-pulse-soft" />
-              {[35, 70, 110, 150, 188].map((x, idx) => (
-                <circle key={idx} cx={x} cy={42 + (idx % 2) * 122} r="4" fill="#fff" opacity="0.85" />
-              ))}
-            </svg>
-          </div>
-          <div className="absolute bottom-0 left-4 rounded-2xl border border-white/20 bg-white/15 backdrop-blur-md px-4 py-3 text-xs shadow-xl monalisa-hover-lift">
-            <p className="text-white/65">Login sebagai</p>
-            <p className="font-bold">{currentUser.username || "Operator"}</p>
-          </div>
-        </div>
+  return (
+    <section className="pln-status-strip">
+      <div className="pln-status-strip__title">
+        <span className="pln-status-strip__eyebrow">MONA LISA 2.0</span>
+        <h2>Dashboard Operasional PLN</h2>
+        <p>Monitoring data pelanggan, grafik pemakaian, WhatsApp gateway, audit log, dan AI insight dalam satu panel kerja.</p>
+      </div>
+
+      <div className="pln-status-strip__items">
+        <div className="pln-status-mini-card"><span>Pelanggan</span><strong>{customers.length}</strong></div>
+        <div className="pln-status-mini-card"><span>Request WA</span><strong>{queryLogs.length}</strong></div>
+        <div className="pln-status-mini-card"><span>Grafik Terkirim</span><strong>{waChartLogs.length}</strong></div>
+        <div className="pln-status-mini-card"><span>Data Parsial</span><strong>{partialData}</strong></div>
+        <div className="pln-status-mini-card pln-status-mini-card--alert"><span>Error Pending</span><strong>{pendingErrors}</strong></div>
+        <div className="pln-status-mini-card pln-status-mini-card--time"><span>Waktu Sistem</span><strong>{currentTime} WIB</strong></div>
       </div>
     </section>
   );
@@ -316,10 +278,10 @@ export default function App() {
   // Real-time clock hook
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString("id-ID"));
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString("id-ID"));
-    }, 1000);
-    return () => clearInterval(timer);
+    // Jam dibuat statis agar dashboard tidak re-render terus menerus.
+    // Ini mencegah efek berkedip / Waiting for localhost berulang saat development.
+    const now = new Date();
+    setCurrentTime(now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }));
   }, []);
 
   // Show dynamic self-destructing toast notifications
@@ -455,7 +417,7 @@ ${error.message}`);
       setAiChatHistory(prev => [...prev, { role: "model", text: reply }]);
     } catch (error) {
       console.error(error);
-      setAiChatHistory(prev => [...prev, { role: "model", text: "⚠️ Hubungan ke satelit asisten Gemini terputus. Silakan pastikan sambungan internet Anda stabil." }]);
+      setAiChatHistory(prev => [...prev, { role: "model", text: "⚠️ Koneksi ke AI gateway terputus. Silakan pastikan sambungan internet Anda stabil." }]);
     } finally {
       setIsAiChatLoading(false);
     }
@@ -891,18 +853,18 @@ ${error.message}`);
   const activeCustomer = customers.find(c => c.idpel === selectedCustomerId) || customers[0];
 
   return (
-    <div className={`min-h-screen ${THEME.bgLight} ${THEME.textDark} font-sans antialiased`}>
+    <div className={`pln-human-dashboard min-h-screen ${THEME.bgLight} ${THEME.textDark} font-sans antialiased`}>
       
       {/* Toast Notification Container */}
       {systemNotification && (
-        <div className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-white border border-slate-200 p-4 rounded-2xl shadow-lg animate-bounce">
+        <div className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-white border border-slate-200 p-4 rounded-2xl shadow-lg">
           <div className={`w-3 h-3 rounded-full ${systemNotification.type === 'success' ? 'bg-green-500' : 'bg-amber-500'}`} />
           <span className="text-sm font-semibold text-slate-800">{systemNotification.text}</span>
         </div>
       )}
 
       {!isLoggedIn ? (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-[#EEF7FF] monalisa-energy-bg relative">
+        <div className="min-h-screen flex items-center justify-center px-4 bg-[#F5F8FC] relative">
           
           <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-8 shadow-md relative">
             
@@ -1086,14 +1048,14 @@ ${error.message}`);
           <main className="flex-1 flex flex-col overflow-x-hidden">
             
             {/* Header section - Height 72px, Navy PLN Background, Professional & Formal */}
-            <header className="h-[72px] bg-gradient-to-r from-[#061A33] via-[#0072CE] to-[#00AEEF] text-white px-6 flex justify-between items-center shadow-sm select-none">
+            <header className="h-[72px] bg-[#073B75] text-white px-6 flex justify-between items-center shadow-sm select-none">
               <div className="flex items-center gap-3">
                 <PLNLogo className="h-9 w-auto" />
                 <div>
                   <h1 className="text-base font-semibold tracking-normal flex items-center gap-2">
                     <span>MONA LISA MONITORING</span>
                     <span className="text-slate-400 font-light text-xs">|</span>
-                    <span className="text-[#FFD100] text-xs font-semibold tracking-wider">P4 AI MONITORING</span>
+                    <span className="text-[#F2C94C] text-xs font-semibold tracking-wider">P4 AI MONITORING</span>
                   </h1>
                 </div>
               </div>
@@ -1101,7 +1063,7 @@ ${error.message}`);
               {/* Status information parameters */}
               <div className="flex items-center gap-6 text-xs">
                 <div className="hidden sm:flex items-center gap-2 text-slate-300">
-                  <Clock size={14} className="text-[#FFD100]" />
+                  <Clock size={14} className="text-[#F2C94C]" />
                   <span className="font-sans">{currentTime} WIB</span>
                 </div>
                 <div className="hidden md:flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded border border-slate-700 text-slate-300">
@@ -1132,13 +1094,13 @@ ${error.message}`);
               {/* TAB: DASHBOARD UTAMA */}
               {activeTab === "Dashboard Utama" && (
                 <>
-                  
-                  <EnergyHero
-                    currentUser={currentUser}
-                    currentTime={currentTime}
+
+                  <CorporateStatusStrip
                     customers={customers}
                     queryLogs={queryLogs}
+                    waChartLogs={waChartLogs}
                     errorLogs={errorLogs}
+                    currentTime={currentTime}
                   />
 
                   {/* Clean Corporate KPI Cards */}
@@ -1191,7 +1153,7 @@ ${error.message}`);
                       </div>
                       <p className="text-xs text-slate-500 uppercase font-semibold tracking-wider">AI Monitoring</p>
                       <h3 className="text-lg font-semibold mt-3 text-slate-700">ONLINE</h3>
-                      <p className="text-[10px] text-slate-500 mt-1.5 font-medium">Gemini Engine Terhubung</p>
+                      <p className="text-[10px] text-slate-500 mt-1.5 font-medium">9Router AI Gateway Siaga</p>
                     </div>
                   </div>
 
@@ -1224,15 +1186,15 @@ ${error.message}`);
                             <Cpu className="text-[#0072CE]" size={16} />
                             Insight Sistem (AI)
                           </h3>
-                          {isAiLoading && <RefreshCw size={14} className="text-[#0072CE] animate-spin" />}
+                          {isAiLoading && <RefreshCw size={14} className="text-[#0072CE]" />}
                         </div>
 
                         {isAiLoading ? (
                           <div className="space-y-3 py-8">
-                            <div className="h-4 bg-slate-100 rounded animate-pulse w-3/4"></div>
-                            <div className="h-4 bg-slate-100 rounded animate-pulse w-full"></div>
-                            <div className="h-4 bg-slate-100 rounded animate-pulse w-5/6"></div>
-                            <div className="h-4 bg-slate-100 rounded animate-pulse w-2/3"></div>
+                            <div className="h-4 bg-slate-100 rounded w-3/4"></div>
+                            <div className="h-4 bg-slate-100 rounded w-full"></div>
+                            <div className="h-4 bg-slate-100 rounded w-5/6"></div>
+                            <div className="h-4 bg-slate-100 rounded w-2/3"></div>
                           </div>
                         ) : (
                           <div className="text-xs text-slate-700 leading-relaxed max-h-[300px] overflow-y-auto space-y-2 select-text bg-slate-50 p-4 rounded-2xl border border-slate-200">
@@ -1261,7 +1223,7 @@ ${error.message}`);
                           disabled={isAiLoading}
                           className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white py-2 px-4 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2"
                         >
-                          <RefreshCw size={12} className={isAiLoading ? 'animate-spin' : ''} />
+                          <RefreshCw size={12} className="" />
                           Picu Analisis AI Real-Time
                         </button>
                       </div>
@@ -1613,7 +1575,7 @@ ${error.message}`);
                                 disabled={isAiBroadcasting}
                                 className="bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold text-[11px] px-3 py-1.5 rounded-xl transition flex items-center gap-1 shrink-0"
                               >
-                                {isAiBroadcasting ? <RefreshCw size={11} className="animate-spin" /> : "Buat Draf AI"}
+                                {isAiBroadcasting ? <RefreshCw size={11} className="" /> : "Buat Draf AI"}
                               </button>
                             </div>
                             {aiCustomBroadcast && (
@@ -1766,7 +1728,7 @@ ${error.message}`);
                         disabled={isAiLoading}
                         className="bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold text-xs rounded-xl px-4 py-2.5 transition flex items-center gap-2"
                       >
-                        <RefreshCw size={14} className={isAiLoading ? "animate-spin" : ""} />
+                        <RefreshCw size={14} className="" />
                         Refresh Analisis AI
                       </button>
                     </div>
@@ -1776,7 +1738,7 @@ ${error.message}`);
                         <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 min-h-[400px]">
                           {isAiLoading ? (
                             <div className="flex flex-col items-center justify-center py-24 space-y-4">
-                              <div className="w-10 h-10 rounded-full border-4 border-slate-200 border-t-[#0072CE] animate-spin"></div>
+                              <div className="w-10 h-10 rounded-full border-4 border-slate-200 border-t-[#0072CE]"></div>
                               <p className="text-xs text-slate-600 font-semibold tracking-wider">AI sedang meninjau Database & Log Sistem...</p>
                             </div>
                           ) : (
@@ -1797,7 +1759,7 @@ ${error.message}`);
                                   })}
                                 </div>
                               ) : (
-                                <p className="text-slate-400 italic">Memicu koneksi Gemini...</p>
+                                <p className="text-slate-400 italic">Menunggu perintah analisis AI...</p>
                               )}
                             </div>
                           )}
@@ -1809,7 +1771,7 @@ ${error.message}`);
                         {/* Live Chatbot */}
                         <div className="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col h-[320px] justify-between shadow-sm">
                           <h3 className="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                             Tanya MONA LISA Copilot (Live)
                           </h3>
                           <div className="flex-1 overflow-y-auto space-y-3 mb-2 pr-1 text-[11px] leading-relaxed">
@@ -1827,7 +1789,7 @@ ${error.message}`);
                             {isAiChatLoading && (
                               <div className="flex justify-start">
                                 <div className="bg-slate-50 border border-slate-200 p-2.5 rounded-2xl rounded-tl-none text-[10px] text-slate-500 flex items-center gap-2">
-                                  <RefreshCw size={11} className="animate-spin" /> Sedang berpikir...
+                                  <RefreshCw size={11} className="" /> Sedang berpikir...
                                 </div>
                               </div>
                             )}
@@ -2475,7 +2437,7 @@ ${error.message}`);
       )}
 
       {selectedErrorForAi && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-xl bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xl relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-[#0072CE]"></div>
             <div className="p-6">
@@ -2505,9 +2467,9 @@ ${error.message}`);
 
                   {isAiErrorLoading ? (
                     <div className="space-y-2 py-6">
-                      <div className="h-3 bg-slate-100 rounded animate-pulse w-3/4"></div>
-                      <div className="h-3 bg-slate-100 rounded animate-pulse w-full"></div>
-                      <div className="h-3 bg-slate-100 rounded animate-pulse w-5/6"></div>
+                      <div className="h-3 bg-slate-100 rounded w-3/4"></div>
+                      <div className="h-3 bg-slate-100 rounded w-full"></div>
+                      <div className="h-3 bg-slate-100 rounded w-5/6"></div>
                     </div>
                   ) : (
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 select-text font-sans text-slate-700 whitespace-pre-wrap leading-relaxed max-h-[250px] overflow-y-auto">
@@ -2523,7 +2485,7 @@ ${error.message}`);
                   disabled={isAiErrorLoading}
                   className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition flex items-center gap-1.5"
                 >
-                  <RefreshCw size={12} className={isAiErrorLoading ? 'animate-spin' : ''} />
+                  <RefreshCw size={12} className="" />
                   Minta Ulang Solusi
                 </button>
                 <button 

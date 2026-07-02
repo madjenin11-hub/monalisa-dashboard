@@ -293,3 +293,121 @@ img {
   backface-visibility: hidden;
   transform: translateZ(0);
 }
+
+
+/* PLN ANTI LOOP PATCH BACKUP */
+
+
+/* =========================================================
+   PLN ANTI LOOP PATCH
+   Menghentikan blinking / repeated animation / logo request.
+   ========================================================= */
+
+.pln-logo-safe {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pln-logo-safe__fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: #f2c94c;
+  color: #073b75;
+  font-weight: 900;
+  letter-spacing: .04em;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Matikan animasi yang berpotensi replay setiap render */
+.pln-human-dashboard .animate-pulse,
+.pln-human-dashboard .animate-bounce,
+.pln-human-dashboard .animate-spin,
+.pln-human-dashboard [class*="animate-"] {
+  animation: none !important;
+}
+
+/* Chart tetap tampil, tapi tidak redraw terus */
+.pln-human-dashboard .pln-chart-line {
+  animation: none !important;
+  stroke-dasharray: none !important;
+  stroke-dashoffset: 0 !important;
+}
+
+.pln-human-dashboard .pln-chart-point {
+  animation: none !important;
+}
+
+/* Hentikan pseudo decorative animation */
+.pln-human-dashboard::before,
+.pln-human-dashboard::after,
+.pln-status-strip::before,
+.pln-status-strip::after {
+  animation: none !important;
+}
+
+/* Hover tetap halus, tidak memicu efek lebay */
+.pln-human-dashboard .grid > div[class*="rounded"]:hover {
+  transform: translateY(-1px) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pln-human-dashboard *,
+  .pln-human-dashboard *::before,
+  .pln-human-dashboard *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* HARD LOOP FIX */
+.pln-human-dashboard *,
+.pln-human-dashboard *::before,
+.pln-human-dashboard *::after {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+}
+
+.pln-human-dashboard .animate-spin,
+.pln-human-dashboard .animate-pulse,
+.pln-human-dashboard .animate-bounce,
+.pln-human-dashboard .animate-fade-in,
+.pln-human-dashboard [class*="animate-"] {
+  animation: none !important;
+}
+
+.pln-chart-line,
+.pln-chart-point {
+  animation: none !important;
+  stroke-dasharray: none !important;
+  stroke-dashoffset: 0 !important;
+}
+
+.pln-logo-safe {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pln-logo-safe__fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: #f2c94c;
+  color: #073b75;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: .04em;
+}
