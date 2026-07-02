@@ -32,3 +32,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# PLN theme local script and backups
+apply_pln_illustrative_theme.py
+src/*.backup-*
+*.backup-*

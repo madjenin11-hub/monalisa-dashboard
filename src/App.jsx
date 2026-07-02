@@ -150,28 +150,106 @@ const INITIAL_EDIT_LOGS = [
   { time: "2026-06-21 14:10:00", user: "Admin (Dian)", idpel: "141001728156", field: "daya", oldVal: "340,000 VA", newVal: "345,000 VA", source: "Dashboard" }
 ];
 
-// Corporate Theme colors (Light background, Navy topbar, PLN Blue primary, Luxury Gold only as subtle accent)
+// PLN Illustrative Theme: clean, glass, animated, but still corporate
 const THEME = {
-  bgLight: "bg-[#F4F7FA]",
-  bgHeader: "bg-[#16213E]", // Navy PLN
-  bgSidebar: "bg-white",
-  borderLight: "border-slate-200",
-  textDark: "text-[#1F2937]",
-  textSecondary: "text-[#6B7280]",
-  plnBlue: "#0072CE", // Aksen PLN Biru
+  bgLight: "bg-[#EEF7FF] monalisa-energy-bg",
+  bgHeader: "bg-gradient-to-r from-[#061A33] via-[#0072CE] to-[#00AEEF]",
+  bgSidebar: "bg-white/90 backdrop-blur-xl",
+  borderLight: "border-sky-100",
+  textDark: "text-[#0B1F3A]",
+  textSecondary: "text-[#64748B]",
+  plnBlue: "#0072CE",
   plnBlueText: "text-[#0072CE]",
-  goldAccent: "#D4A017", // Emas aksen tipis
-  goldText: "text-[#D4A017]"
+  cyanAccent: "#00AEEF",
+  yellowAccent: "#FFD100",
+  yellowText: "text-[#FFD100]",
+  emeraldAccent: "#00B686"
 };
 
 // Helper function to render official PLN logo image verbatim
+// Simpan logo PLN di public/pln-logo.svg atau public/pln-logo.png.
 const PLNLogo = ({ className = "h-8 w-auto" }) => (
-  <img 
-    src="/pln-logo.png" 
-    alt="PLN Logo" 
-    className={`${className} object-contain`} 
+  <img
+    src="/pln-logo.svg"
+    onError={(e) => { e.currentTarget.src = "/pln-logo.png"; }}
+    alt="PLN Logo"
+    className={`${className} object-contain drop-shadow-sm`}
   />
 );
+
+const EnergyHero = ({ currentUser, currentTime, customers, queryLogs, errorLogs }) => {
+  const activeErrors = errorLogs.filter((item) => item.status !== "Selesai").length;
+
+  return (
+    <section className="relative overflow-hidden rounded-[28px] border border-white/60 bg-gradient-to-br from-[#061A33] via-[#0072CE] to-[#00AEEF] p-6 shadow-[0_24px_80px_rgba(0,114,206,0.22)] text-white monalisa-fade-up">
+      <div className="absolute inset-0 opacity-25 monalisa-grid-pattern" />
+      <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-[#FFD100]/25 blur-3xl monalisa-float" />
+      <div className="absolute right-8 bottom-2 h-44 w-44 rounded-full bg-white/15 blur-2xl monalisa-float-reverse" />
+
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div className="lg:col-span-7">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="rounded-2xl bg-white p-2.5 shadow-lg shadow-black/10">
+              <PLNLogo className="h-10 w-auto" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-white/75 font-semibold">PLN Digital Monitoring</p>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">MONA LISA AI Dashboard</h2>
+            </div>
+          </div>
+
+          <p className="max-w-2xl text-sm leading-6 text-white/82">
+            Monitoring pemakaian energi, request WhatsApp, audit log, grafik pelanggan, dan analisis AI dalam satu panel operasional yang lebih visual, interaktif, dan tetap beridentitas PLN.
+          </p>
+
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+            <div className="rounded-2xl bg-white/12 backdrop-blur-md border border-white/15 p-3 monalisa-hover-lift">
+              <p className="text-white/60">Pelanggan</p>
+              <p className="mt-1 text-xl font-bold">{customers.length}</p>
+            </div>
+            <div className="rounded-2xl bg-white/12 backdrop-blur-md border border-white/15 p-3 monalisa-hover-lift">
+              <p className="text-white/60">Request WA</p>
+              <p className="mt-1 text-xl font-bold">{queryLogs.length}</p>
+            </div>
+            <div className="rounded-2xl bg-white/12 backdrop-blur-md border border-white/15 p-3 monalisa-hover-lift">
+              <p className="text-white/60">Pending Error</p>
+              <p className="mt-1 text-xl font-bold">{activeErrors}</p>
+            </div>
+            <div className="rounded-2xl bg-[#FFD100]/95 text-[#061A33] p-3 shadow-lg monalisa-hover-lift">
+              <p className="text-[#061A33]/65">Waktu</p>
+              <p className="mt-1 text-sm font-bold font-sans">{currentTime} WIB</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-5 relative min-h-[240px] flex items-center justify-center">
+          <div className="relative h-56 w-56 rounded-full bg-white/10 border border-white/20 flex items-center justify-center monalisa-orbit">
+            <div className="absolute inset-7 rounded-full border border-dashed border-[#FFD100]/60" />
+            <div className="absolute h-32 w-32 rounded-full bg-white/15 blur-xl" />
+            <svg viewBox="0 0 220 220" className="relative h-52 w-52">
+              <defs>
+                <linearGradient id="plnEnergyStroke" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#FFD100" />
+                  <stop offset="55%" stopColor="#FFFFFF" />
+                  <stop offset="100%" stopColor="#00E5FF" />
+                </linearGradient>
+              </defs>
+              <path d="M45 128 C70 62, 134 56, 162 92 C191 128, 158 176, 106 166 C72 160, 62 141, 45 128Z" fill="rgba(255,255,255,0.12)" stroke="url(#plnEnergyStroke)" strokeWidth="3" className="monalisa-draw" />
+              <path d="M115 42 L78 120 H112 L96 178 L154 94 H118 Z" fill="#FFD100" opacity="0.95" className="monalisa-pulse-soft" />
+              {[35, 70, 110, 150, 188].map((x, idx) => (
+                <circle key={idx} cx={x} cy={42 + (idx % 2) * 122} r="4" fill="#fff" opacity="0.85" />
+              ))}
+            </svg>
+          </div>
+          <div className="absolute bottom-0 left-4 rounded-2xl border border-white/20 bg-white/15 backdrop-blur-md px-4 py-3 text-xs shadow-xl monalisa-hover-lift">
+            <p className="text-white/65">Login sebagai</p>
+            <p className="font-bold">{currentUser.username || "Operator"}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -713,7 +791,7 @@ ${error.message}`);
     const areaD = points.length > 0 ? `${pathD} L ${points[points.length-1].x} ${paddingTop + chartHeight} L ${points[0].x} ${paddingTop + chartHeight} Z` : "";
 
     return (
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden">
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0072CE]"></div>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-slate-100 pb-4">
           <div>
@@ -723,7 +801,7 @@ ${error.message}`);
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">IDPEL: <span className="font-sans text-slate-700">{customer.idpel}</span> | {customer.nama}</p>
           </div>
-          <div className="bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-700 font-semibold mt-2 md:mt-0">
+          <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-700 font-semibold mt-2 md:mt-0">
             Daya Kontrak: <span className="text-slate-900 font-sans">{customer.daya}</span> | Tarif {customer.tarif}
           </div>
         </div>
@@ -761,12 +839,12 @@ ${error.message}`);
             <path d={areaD} fill="url(#chartGradient)" />
 
             {/* Core Line Path */}
-            <path d={pathD} fill="none" stroke="#0072CE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={pathD} fill="none" stroke="#0072CE" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="monalisa-draw" />
 
             {/* Clean Data Points */}
             {points.map((p, idx) => (
               <g key={idx} className="group cursor-pointer">
-                <circle cx={p.x} cy={p.y} r="4" fill="white" stroke="#0072CE" strokeWidth="2" />
+                <circle cx={p.x} cy={p.y} r="4.5" fill="white" stroke="#0072CE" strokeWidth="2.5" className="monalisa-pulse-soft" />
                 <circle cx={p.x} cy={p.y} r="8" fill="#0072CE" fillOpacity="0" className="hover:fill-opacity-15 transition-all duration-150" />
                 
                 {/* Floating Value box inside tooltip styling on hover */}
@@ -817,14 +895,14 @@ ${error.message}`);
       
       {/* Toast Notification Container */}
       {systemNotification && (
-        <div className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-white border border-slate-200 p-4 rounded-xl shadow-lg animate-bounce">
+        <div className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-white border border-slate-200 p-4 rounded-2xl shadow-lg animate-bounce">
           <div className={`w-3 h-3 rounded-full ${systemNotification.type === 'success' ? 'bg-green-500' : 'bg-amber-500'}`} />
           <span className="text-sm font-semibold text-slate-800">{systemNotification.text}</span>
         </div>
       )}
 
       {!isLoggedIn ? (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-[#F4F7FA] relative">
+        <div className="min-h-screen flex items-center justify-center px-4 bg-[#EEF7FF] monalisa-energy-bg relative">
           
           <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-8 shadow-md relative">
             
@@ -847,7 +925,7 @@ ${error.message}`);
                     value={loginCreds.username}
                     onChange={(e) => setLoginCreds({...loginCreds, username: e.target.value})}
                     placeholder="Masukkan username" 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 pl-10 pr-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
                   />
                 </div>
               </div>
@@ -861,7 +939,7 @@ ${error.message}`);
                     value={loginCreds.password}
                     onChange={(e) => setLoginCreds({...loginCreds, password: e.target.value})}
                     placeholder="Password" 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 pl-10 pr-10 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-10 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
                   />
                   <button 
                     type="button" 
@@ -878,7 +956,7 @@ ${error.message}`);
                 <select 
                   value={loginCreds.role}
                   onChange={(e) => setLoginCreds({...loginCreds, role: e.target.value})}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
                 >
                   <option value="Super Admin">Super Admin</option>
                   <option value="Admin">Admin</option>
@@ -889,7 +967,7 @@ ${error.message}`);
 
               <button 
                 type="submit" 
-                className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold py-2.5 rounded-lg transition-all shadow-sm flex justify-center items-center gap-2"
+                className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold py-2.5 rounded-xl transition-all shadow-sm flex justify-center items-center gap-2"
               >
                 Masuk Sistem <ArrowRight size={16} />
               </button>
@@ -928,9 +1006,9 @@ ${error.message}`);
                   <button
                     key={menu.name}
                     onClick={() => setActiveTab(menu.name)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                       activeTab === menu.name 
-                        ? 'bg-slate-100 text-[#0072CE] border-l-4 border-[#0072CE]' 
+                        ? 'bg-slate-100 text-[#0072CE] border-l-4 border-[#00AEEF]' 
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
@@ -949,9 +1027,9 @@ ${error.message}`);
                   <button
                     key={menu.name}
                     onClick={() => setActiveTab(menu.name)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                       activeTab === menu.name 
-                        ? 'bg-slate-100 text-[#0072CE] border-l-4 border-[#0072CE]' 
+                        ? 'bg-slate-100 text-[#0072CE] border-l-4 border-[#00AEEF]' 
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
@@ -971,9 +1049,9 @@ ${error.message}`);
                   <button
                     key={menu.name}
                     onClick={() => setActiveTab(menu.name)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                       activeTab === menu.name 
-                        ? 'bg-slate-100 text-[#0072CE] border-l-4 border-[#0072CE]' 
+                        ? 'bg-slate-100 text-[#0072CE] border-l-4 border-[#00AEEF]' 
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
@@ -987,7 +1065,7 @@ ${error.message}`);
             {/* Logged User Card footer */}
             <div className="p-4 border-t border-slate-100 bg-slate-50">
               <div className="flex items-center gap-3 mb-3">
-                <div className="bg-[#0072CE]/10 p-2 rounded-lg border border-[#0072CE]/10">
+                <div className="bg-[#0072CE]/10 p-2 rounded-xl border border-[#00AEEF]/10">
                   <User className="text-[#0072CE] h-4 w-4" />
                 </div>
                 <div>
@@ -997,7 +1075,7 @@ ${error.message}`);
               </div>
               <button 
                 onClick={() => setIsLoggedIn(false)}
-                className="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold transition flex justify-center items-center gap-1.5"
+                className="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold transition flex justify-center items-center gap-1.5"
               >
                 <LogOut size={13} /> Logout
               </button>
@@ -1008,14 +1086,14 @@ ${error.message}`);
           <main className="flex-1 flex flex-col overflow-x-hidden">
             
             {/* Header section - Height 72px, Navy PLN Background, Professional & Formal */}
-            <header className="h-[72px] bg-[#16213E] text-white px-6 flex justify-between items-center shadow-sm select-none">
+            <header className="h-[72px] bg-gradient-to-r from-[#061A33] via-[#0072CE] to-[#00AEEF] text-white px-6 flex justify-between items-center shadow-sm select-none">
               <div className="flex items-center gap-3">
                 <PLNLogo className="h-9 w-auto" />
                 <div>
                   <h1 className="text-base font-semibold tracking-normal flex items-center gap-2">
                     <span>MONA LISA MONITORING</span>
                     <span className="text-slate-400 font-light text-xs">|</span>
-                    <span className="text-[#FFD700] text-xs font-semibold tracking-wider">P4 AI MONITORING</span>
+                    <span className="text-[#FFD100] text-xs font-semibold tracking-wider">P4 AI MONITORING</span>
                   </h1>
                 </div>
               </div>
@@ -1023,7 +1101,7 @@ ${error.message}`);
               {/* Status information parameters */}
               <div className="flex items-center gap-6 text-xs">
                 <div className="hidden sm:flex items-center gap-2 text-slate-300">
-                  <Clock size={14} className="text-[#FFD700]" />
+                  <Clock size={14} className="text-[#FFD100]" />
                   <span className="font-sans">{currentTime} WIB</span>
                 </div>
                 <div className="hidden md:flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded border border-slate-700 text-slate-300">
@@ -1054,9 +1132,18 @@ ${error.message}`);
               {/* TAB: DASHBOARD UTAMA */}
               {activeTab === "Dashboard Utama" && (
                 <>
+                  
+                  <EnergyHero
+                    currentUser={currentUser}
+                    currentTime={currentTime}
+                    customers={customers}
+                    queryLogs={queryLogs}
+                    errorLogs={errorLogs}
+                  />
+
                   {/* Clean Corporate KPI Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white/80 backdrop-blur-xl border border-white/70 rounded-2xl p-5 shadow-[0_14px_40px_rgba(0,114,206,0.10)] relative overflow-hidden group monalisa-hover-lift">
                       <div className="absolute top-4 right-4 text-slate-400">
                         <MessageSquare size={16} />
                       </div>
@@ -1067,7 +1154,7 @@ ${error.message}`);
                       </p>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white/80 backdrop-blur-xl border border-white/70 rounded-2xl p-5 shadow-[0_14px_40px_rgba(0,114,206,0.10)] relative overflow-hidden group monalisa-hover-lift">
                       <div className="absolute top-4 right-4 text-slate-400">
                         <BarChart3 size={16} />
                       </div>
@@ -1078,7 +1165,7 @@ ${error.message}`);
                       </p>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white/80 backdrop-blur-xl border border-white/70 rounded-2xl p-5 shadow-[0_14px_40px_rgba(0,114,206,0.10)] relative overflow-hidden group monalisa-hover-lift">
                       <div className="absolute top-4 right-4 text-slate-400">
                         <AlertTriangle size={16} />
                       </div>
@@ -1089,7 +1176,7 @@ ${error.message}`);
                       <p className="text-[10px] text-slate-500 mt-1.5 font-medium">Perlu validasi AMR segera</p>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white/80 backdrop-blur-xl border border-white/70 rounded-2xl p-5 shadow-[0_14px_40px_rgba(0,114,206,0.10)] relative overflow-hidden group monalisa-hover-lift">
                       <div className="absolute top-4 right-4 text-slate-400">
                         <Activity size={16} />
                       </div>
@@ -1098,7 +1185,7 @@ ${error.message}`);
                       <p className="text-[10px] text-slate-500 mt-1.5 font-medium">Tidak ada error kritis</p>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white/80 backdrop-blur-xl border border-white/70 rounded-2xl p-5 shadow-[0_14px_40px_rgba(0,114,206,0.10)] relative overflow-hidden group monalisa-hover-lift">
                       <div className="absolute top-4 right-4 text-slate-400">
                         <Cpu size={16} />
                       </div>
@@ -1111,12 +1198,12 @@ ${error.message}`);
                   {/* Primary interactive chart and customer selection */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl border border-slate-200 gap-4 shadow-sm">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-2xl border border-slate-200 gap-4 shadow-sm">
                         <span className="text-xs font-semibold text-slate-700">Pilih IDPEL untuk Menampilkan Grafik Utama:</span>
                         <select 
                           value={selectedCustomerId}
                           onChange={(e) => setSelectedCustomerId(e.target.value)}
-                          className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#0072CE] font-semibold"
+                          className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#00AEEF] font-semibold"
                         >
                           {customers.map(c => (
                             <option key={c.idpel} value={c.idpel}>{c.idpel} - {c.nama}</option>
@@ -1129,7 +1216,7 @@ ${error.message}`);
                     </div>
 
                     {/* Integrated AI Insight - Clean light theme panel */}
-                    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between">
+                    <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)] relative overflow-hidden flex flex-col justify-between">
                       <div className="absolute top-0 left-0 w-full h-1 bg-[#0072CE]"></div>
                       <div>
                         <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
@@ -1148,7 +1235,7 @@ ${error.message}`);
                             <div className="h-4 bg-slate-100 rounded animate-pulse w-2/3"></div>
                           </div>
                         ) : (
-                          <div className="text-xs text-slate-700 leading-relaxed max-h-[300px] overflow-y-auto space-y-2 select-text bg-slate-50 p-4 rounded-xl border border-slate-200">
+                          <div className="text-xs text-slate-700 leading-relaxed max-h-[300px] overflow-y-auto space-y-2 select-text bg-slate-50 p-4 rounded-2xl border border-slate-200">
                             {aiInsightResult ? (
                               <div className="prose prose-slate prose-xs">
                                 {aiInsightResult.split("\n").map((line, idx) => {
@@ -1172,7 +1259,7 @@ ${error.message}`);
                         <button
                           onClick={() => generateAiInsights()}
                           disabled={isAiLoading}
-                          className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white py-2 px-4 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-2"
+                          className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white py-2 px-4 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2"
                         >
                           <RefreshCw size={12} className={isAiLoading ? 'animate-spin' : ''} />
                           Picu Analisis AI Real-Time
@@ -1182,7 +1269,7 @@ ${error.message}`);
                   </div>
 
                   {/* Audit Trail List (Light theme) */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                     <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
                       <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
                         <Database className="text-[#0072CE]" size={16} />
@@ -1229,7 +1316,7 @@ ${error.message}`);
 
               {/* TAB: MASTER DATABASE */}
               {activeTab === "Master Database" && (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
                     <div>
                       <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
@@ -1246,7 +1333,7 @@ ${error.message}`);
                         placeholder="Cari IDPEL, Nama, atau Tarif..." 
                         value={searchIdpel}
                         onChange={(e) => setSearchIdpel(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-9 pr-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-9 pr-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs"
                       />
                     </div>
                   </div>
@@ -1315,7 +1402,7 @@ ${error.message}`);
                                     </button>
                                     <button 
                                       onClick={() => { setSelectedCustomerId(c.idpel); setActiveTab("Grafik Pemakaian"); }}
-                                      className="px-2 py-1 bg-blue-50 hover:bg-blue-100 border border-[#0072CE]/30 text-[#0072CE] rounded text-[10px] transition font-semibold"
+                                      className="px-2 py-1 bg-blue-50 hover:bg-blue-100 border border-[#00AEEF]/30 text-[#0072CE] rounded text-[10px] transition font-semibold"
                                     >
                                       Grafik
                                     </button>
@@ -1334,7 +1421,7 @@ ${error.message}`);
               {activeTab === "Data Pelanggan" && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Left Column Profile info */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)] space-y-6">
                     <div className="flex justify-between items-start border-b border-slate-100 pb-4">
                       <div>
                         <span className="text-[9px] bg-slate-100 text-[#0072CE] border border-slate-200 px-2 py-1 rounded font-semibold uppercase tracking-wider">PROFIL PELANGGAN AMR</span>
@@ -1375,7 +1462,7 @@ ${error.message}`);
                       </div>
                       <div className="flex flex-col gap-1 pt-2">
                         <span className="text-slate-500">Alamat Terdaftar:</span>
-                        <span className="text-slate-700 italic bg-slate-50 p-2.5 rounded-lg border border-slate-200 leading-relaxed">{activeCustomer.alamat}</span>
+                        <span className="text-slate-700 italic bg-slate-50 p-2.5 rounded-xl border border-slate-200 leading-relaxed">{activeCustomer.alamat}</span>
                       </div>
                     </div>
 
@@ -1384,14 +1471,14 @@ ${error.message}`);
                         href={`https://www.google.com/maps/search/?api=1&query=${activeCustomer.tikor}`}
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="w-full py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-lg text-center font-semibold block transition flex items-center justify-center gap-2"
+                        className="w-full py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-xl text-center font-semibold block transition flex items-center justify-center gap-2"
                       >
                         <MapPin size={14} /> Buka di Google Maps
                       </a>
                       
                       <button 
                         onClick={() => notify(`Membuka Diagram Fasor IDPEL ${activeCustomer.idpel}`, "success")}
-                        className="w-full py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-center font-semibold block transition"
+                        className="w-full py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl text-center font-semibold block transition"
                       >
                         Buka Diagram Fasor AMR
                       </button>
@@ -1400,7 +1487,7 @@ ${error.message}`);
 
                   {/* Right Column Monthly Load Table */}
                   <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                       <h3 className="text-sm font-semibold mb-4 text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-3">
                         <BarChart3 className="text-[#0072CE]" size={16} />
                         Data Pemakaian Energi Bulanan (kWh) - Tahun 2026
@@ -1423,7 +1510,7 @@ ${error.message}`);
                         ].map((m, idx) => {
                           const val = activeCustomer[m.key];
                           return (
-                            <div key={idx} className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center relative overflow-hidden">
+                            <div key={idx} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center relative overflow-hidden">
                               <span className="text-[9px] text-slate-500 uppercase font-semibold">{m.label}</span>
                               <p className={`text-sm font-sans mt-1 font-semibold ${val === null ? 'text-red-600' : 'text-slate-800'}`}>
                                 {val !== null ? `${val.toLocaleString("id-ID")}` : "-"}
@@ -1433,7 +1520,7 @@ ${error.message}`);
                         })}
                       </div>
 
-                      <div className="mt-6 flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
+                      <div className="mt-6 flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-200 gap-4">
                         <div className="text-xs">
                           <span className="text-slate-500">Kelengkapan Berkas Data:</span>
                           <span className={`block font-semibold mt-1 ${Object.values(activeCustomer).includes(null) ? 'text-amber-600' : 'text-green-600'}`}>
@@ -1444,7 +1531,7 @@ ${error.message}`);
                         <div className="flex gap-2">
                           <button 
                             onClick={() => { setActiveTab("Update Data"); setUpdateFormData({ ...updateFormData, idpel: activeCustomer.idpel }); }}
-                            className="bg-[#0072CE] hover:bg-[#005ea8] text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                            className="bg-[#0072CE] hover:bg-[#005ea8] text-white px-3 py-1.5 rounded-xl text-xs font-semibold transition"
                           >
                             Edit Melalui Dashboard
                           </button>
@@ -1461,7 +1548,7 @@ ${error.message}`);
               {/* TAB: GRAFIK PEMAKAIAN */}
               {activeTab === "Grafik Pemakaian" && (
                 <div className="space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
                       <div>
                         <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
@@ -1474,7 +1561,7 @@ ${error.message}`);
                       <select 
                         value={selectedCustomerId}
                         onChange={(e) => setSelectedCustomerId(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#0072CE]"
+                        className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#00AEEF]"
                       >
                         {customers.map(c => (
                           <option key={c.idpel} value={c.idpel}>{c.idpel} - {c.nama}</option>
@@ -1488,12 +1575,12 @@ ${error.message}`);
                       </div>
 
                       {/* WhatsApp Delivery Panel & Caption Preview (Light Standard) */}
-                      <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col justify-between">
+                      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
                         <div>
                           <span className="text-[10px] text-slate-500 border border-slate-200 px-2 py-0.5 bg-white rounded font-semibold uppercase block w-max">WHATSAPP PREVIEW</span>
                           <h3 className="text-xs font-semibold text-slate-700 mt-3 mb-2">Simulasi Caption Pesan WhatsApp</h3>
                           
-                          <div className="bg-white p-4 rounded-xl border border-slate-200 text-xs text-slate-600 font-sans space-y-3 max-h-[220px] overflow-y-auto leading-relaxed shadow-inner">
+                          <div className="bg-white p-4 rounded-2xl border border-slate-200 text-xs text-slate-600 font-sans space-y-3 max-h-[220px] overflow-y-auto leading-relaxed shadow-inner">
                             <p className="text-[#0072CE] font-semibold text-[10px]">PENGIRIM: MONA_LISA_BOT</p>
                             <p>
                               {systemConfig.captionFormat
@@ -1515,7 +1602,7 @@ ${error.message}`);
                               <select
                                 value={aiTone}
                                 onChange={(e) => setAiTone(e.target.value)}
-                                className="bg-white border border-slate-200 text-slate-800 text-[11px] rounded-lg px-2 py-1.5 focus:outline-none flex-1 font-semibold"
+                                className="bg-white border border-slate-200 text-slate-800 text-[11px] rounded-xl px-2 py-1.5 focus:outline-none flex-1 font-semibold"
                               >
                                 <option value="Sopan & Formal">Sopan & Formal (SOP)</option>
                                 <option value="Persuasif Tegas (Peringatan)">Tegas & Urgent (Warning)</option>
@@ -1524,13 +1611,13 @@ ${error.message}`);
                               <button
                                 onClick={handleAiBroadcastGenerate}
                                 disabled={isAiBroadcasting}
-                                className="bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold text-[11px] px-3 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0"
+                                className="bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold text-[11px] px-3 py-1.5 rounded-xl transition flex items-center gap-1 shrink-0"
                               >
                                 {isAiBroadcasting ? <RefreshCw size={11} className="animate-spin" /> : "Buat Draf AI"}
                               </button>
                             </div>
                             {aiCustomBroadcast && (
-                              <div className="bg-white p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600 font-sans space-y-1 max-h-[140px] overflow-y-auto leading-relaxed relative select-all shadow-inner">
+                              <div className="bg-white p-3 rounded-2xl border border-slate-200 text-[11px] text-slate-600 font-sans space-y-1 max-h-[140px] overflow-y-auto leading-relaxed relative select-all shadow-inner">
                                 <span className="text-[#0072CE] font-semibold text-[9px] block">REKOMENDASI COPYWRITING AI:</span>
                                 <p className="whitespace-pre-wrap">{aiCustomBroadcast}</p>
                               </div>
@@ -1553,14 +1640,14 @@ ${error.message}`);
                               }, ...prev]);
                               notify(`Grafik berhasil dikirim ulang ke nomor terdaftar!`, "success");
                             }}
-                            className="w-full bg-[#10B981] hover:bg-[#059669] text-white py-2.5 px-4 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-2 shadow-sm"
+                            className="w-full bg-[#10B981] hover:bg-[#059669] text-white py-2.5 px-4 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 shadow-sm"
                           >
                             <Send size={14} /> Kirim Ulang Grafik ke WhatsApp
                           </button>
 
                           <button 
                             onClick={() => notify(`Mengunduh berkas gambar Grafik_${activeCustomer.idpel}.png`, "success")}
-                            className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 py-2.5 px-4 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-2 shadow-sm"
+                            className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 py-2.5 px-4 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 shadow-sm"
                           >
                             <Download size={14} /> Unduh Gambar Grafik (.PNG)
                           </button>
@@ -1573,7 +1660,7 @@ ${error.message}`);
 
               {/* TAB: QUERY LOG WA */}
               {activeTab === "Query Log WA" && (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                   <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                     <div>
                       <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
@@ -1617,7 +1704,7 @@ ${error.message}`);
 
               {/* TAB: LOG GRAFIK WA */}
               {activeTab === "Log Grafik WA" && (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                   <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                     <div>
                       <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
@@ -1664,7 +1751,7 @@ ${error.message}`);
               {/* TAB: AI INSIGHT DETAILED PANEL */}
               {activeTab === "AI Insight" && (
                 <div className="space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
                       <div>
                         <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
@@ -1677,7 +1764,7 @@ ${error.message}`);
                       <button 
                         onClick={() => generateAiInsights()}
                         disabled={isAiLoading}
-                        className="bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold text-xs rounded-lg px-4 py-2.5 transition flex items-center gap-2"
+                        className="bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold text-xs rounded-xl px-4 py-2.5 transition flex items-center gap-2"
                       >
                         <RefreshCw size={14} className={isAiLoading ? "animate-spin" : ""} />
                         Refresh Analisis AI
@@ -1686,7 +1773,7 @@ ${error.message}`);
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       <div className="lg:col-span-2 space-y-4">
-                        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 min-h-[400px]">
+                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 min-h-[400px]">
                           {isAiLoading ? (
                             <div className="flex flex-col items-center justify-center py-24 space-y-4">
                               <div className="w-10 h-10 rounded-full border-4 border-slate-200 border-t-[#0072CE] animate-spin"></div>
@@ -1720,7 +1807,7 @@ ${error.message}`);
                       {/* Interactive Chat Console and Custom Prompt Box */}
                       <div className="space-y-6">
                         {/* Live Chatbot */}
-                        <div className="bg-white p-5 rounded-xl border border-slate-200 flex flex-col h-[320px] justify-between shadow-sm">
+                        <div className="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col h-[320px] justify-between shadow-sm">
                           <h3 className="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5 border-b border-slate-100 pb-2">
                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                             Tanya MONA LISA Copilot (Live)
@@ -1728,7 +1815,7 @@ ${error.message}`);
                           <div className="flex-1 overflow-y-auto space-y-3 mb-2 pr-1 text-[11px] leading-relaxed">
                             {aiChatHistory.map((item, index) => (
                               <div key={index} className={`flex ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`p-2.5 rounded-xl max-w-[85%] border ${
+                                <div className={`p-2.5 rounded-2xl max-w-[85%] border ${
                                   item.role === 'user' 
                                     ? 'bg-slate-100 text-slate-800 border-slate-200 rounded-tr-none' 
                                     : 'bg-blue-50 text-slate-700 border-blue-100 rounded-tl-none'
@@ -1739,7 +1826,7 @@ ${error.message}`);
                             ))}
                             {isAiChatLoading && (
                               <div className="flex justify-start">
-                                <div className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl rounded-tl-none text-[10px] text-slate-500 flex items-center gap-2">
+                                <div className="bg-slate-50 border border-slate-200 p-2.5 rounded-2xl rounded-tl-none text-[10px] text-slate-500 flex items-center gap-2">
                                   <RefreshCw size={11} className="animate-spin" /> Sedang berpikir...
                                 </div>
                               </div>
@@ -1751,29 +1838,29 @@ ${error.message}`);
                               value={aiChatInput}
                               onChange={(e) => setAiChatInput(e.target.value)}
                               placeholder="Konsultasikan beban/anomali..."
-                              className="flex-1 bg-slate-50 border border-slate-200 text-[11px] text-slate-800 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#0072CE]"
+                              className="flex-1 bg-slate-50 border border-slate-200 text-[11px] text-slate-800 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[#00AEEF]"
                             />
                             <button 
                               type="submit"
-                              className="bg-[#0072CE] hover:bg-[#005ea8] text-white px-3 rounded-lg flex items-center justify-center transition shrink-0"
+                              className="bg-[#0072CE] hover:bg-[#005ea8] text-white px-3 rounded-xl flex items-center justify-center transition shrink-0"
                             >
                               <Send size={12} />
                             </button>
                           </form>
                         </div>
 
-                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                           <h3 className="text-xs font-semibold text-slate-700 mb-2">Tanyakan hal khusus pada AI:</h3>
                           <textarea 
                             value={customAiPrompt}
                             onChange={(e) => setCustomAiPrompt(e.target.value)}
                             placeholder="Contoh: Apakah ada indikasi penurunan drastis pemakaian di Siloam Hospital? Berikan langkah taktisnya." 
-                            className="w-full h-24 bg-slate-50 border border-slate-200 rounded-lg p-3 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs leading-relaxed"
+                            className="w-full h-24 bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs leading-relaxed"
                           />
                           <button 
                             onClick={() => generateAiInsights(customAiPrompt)}
                             disabled={isAiLoading || !customAiPrompt.trim()}
-                            className="w-full mt-3 bg-white border border-[#0072CE] text-[#0072CE] hover:bg-blue-50 py-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-2"
+                            className="w-full mt-3 bg-white border border-[#00AEEF] text-[#0072CE] hover:bg-blue-50 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2"
                           >
                             <Cpu size={12} /> Kirim Perintah ke AI
                           </button>
@@ -1788,13 +1875,13 @@ ${error.message}`);
               {activeTab === "WA Simulator" && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Left explanation pane */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)] space-y-4">
                     <h2 className="text-md font-semibold text-slate-800">WA Gateway Simulator</h2>
                     <p className="text-xs text-slate-500 leading-relaxed">
                       Gunakan panel ini untuk mensimulasikan pesan masuk dari WhatsApp operator ke mesin sistem MONA LISA. Sistem akan mengurai format pesan, memperbarui Master Database secara instan, dan mencatatnya ke log transaksi.
                     </p>
 
-                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs space-y-3">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-3">
                       <p className="font-semibold text-slate-700">Template Perintah yang Didukung:</p>
                       
                       <div className="space-y-2">
@@ -1822,7 +1909,7 @@ ${error.message}`);
                   </div>
 
                   {/* Right Chat UI Simulator */}
-                  <div className="lg:col-span-2 bg-slate-100 border border-slate-200 rounded-xl p-6 shadow-sm h-[550px] flex flex-col justify-between">
+                  <div className="lg:col-span-2 bg-slate-100 border border-slate-200 rounded-2xl p-6 shadow-sm h-[550px] flex flex-col justify-between">
                     {/* Simulator Header */}
                     <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
                       <div className="flex items-center gap-3">
@@ -1842,9 +1929,9 @@ ${error.message}`);
                           key={i} 
                           className={`flex ${res.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                          <div className={`p-3 rounded-lg max-w-[80%] whitespace-pre-line border ${
+                          <div className={`p-3 rounded-xl max-w-[80%] whitespace-pre-line border ${
                             res.role === 'user' 
-                              ? 'bg-blue-600 text-white rounded-tr-none border-[#0072CE]' 
+                              ? 'bg-blue-600 text-white rounded-tr-none border-[#00AEEF]' 
                               : 'bg-white text-slate-700 rounded-tl-none border-slate-200'
                           }`}>
                             <span className={`block text-[8px] font-semibold mb-1 ${res.role === 'user' ? 'text-blue-100' : 'text-slate-400'}`}>
@@ -1863,11 +1950,11 @@ ${error.message}`);
                         value={waSimMessage}
                         onChange={(e) => setWaSimMessage(e.target.value)}
                         placeholder="Ketik perintah WhatsApp disini... (Contoh: CEK 141001728156)"
-                        className="flex-1 bg-white border border-slate-200 text-slate-800 text-xs rounded-lg px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-[#0072CE]"
+                        className="flex-1 bg-white border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-[#0072CE]"
                       />
                       <button 
                         type="submit"
-                        className="bg-[#0072CE] hover:bg-[#005ea8] text-white px-4 rounded-lg flex items-center justify-center transition"
+                        className="bg-[#0072CE] hover:bg-[#005ea8] text-white px-4 rounded-xl flex items-center justify-center transition"
                       >
                         <Send size={16} />
                       </button>
@@ -1879,7 +1966,7 @@ ${error.message}`);
               {/* TAB: UPDATE DATA */}
               {activeTab === "Update Data" && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                     <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2 mb-2 border-b border-slate-100 pb-3">
                       <Edit3 className="text-[#0072CE]" size={18} />
                       Update Pemakaian Pelanggan via Dashboard
@@ -1892,7 +1979,7 @@ ${error.message}`);
                         <select 
                           value={updateFormData.idpel}
                           onChange={(e) => setUpdateFormData({ ...updateFormData, idpel: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
                           required
                         >
                           <option value="">-- Pilih IDPEL --</option>
@@ -1908,7 +1995,7 @@ ${error.message}`);
                           <select 
                             value={updateFormData.fieldName}
                             onChange={(e) => setUpdateFormData({ ...updateFormData, fieldName: e.target.value })}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
                           >
                             <option value="jan">Januari</option>
                             <option value="feb">Februari</option>
@@ -1933,7 +2020,7 @@ ${error.message}`);
                             value={updateFormData.newValue}
                             onChange={(e) => setUpdateFormData({ ...updateFormData, newValue: e.target.value })}
                             placeholder="Nilai baru..."
-                            className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-sm"
                             required
                           />
                         </div>
@@ -1941,14 +2028,14 @@ ${error.message}`);
 
                       <button 
                         type="submit"
-                        className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold py-2.5 rounded-lg transition"
+                        className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold py-2.5 rounded-xl transition"
                       >
                         Simpan Perubahan ke Database
                       </button>
                     </form>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                     <h3 className="text-xs font-semibold text-slate-700 mb-4 border-b border-slate-100 pb-2">Informasi Aturan Audit Trail (EDIT_LOG)</h3>
                     <div className="text-xs text-slate-500 leading-relaxed space-y-3">
                       <p>Sesuai dengan standar dokumentasi operasional P4 PLN:</p>
@@ -1964,7 +2051,7 @@ ${error.message}`);
 
               {/* TAB: TAMBAH DATA */}
               {activeTab === "Tambah Data" && (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                   <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2 mb-2 border-b border-slate-100 pb-3">
                     <PlusCircle className="text-[#0072CE]" size={18} />
                     Tambah Pelanggan Baru ke Database MONA LISA
@@ -1980,7 +2067,7 @@ ${error.message}`);
                           placeholder="Contoh: 141001741500" 
                           value={newCustForm.idpel}
                           onChange={(e) => setNewCustForm({...newCustForm, idpel: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs font-sans"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs font-sans"
                           required
                         />
                       </div>
@@ -1992,7 +2079,7 @@ ${error.message}`);
                           placeholder="PT Cahaya Abadi" 
                           value={newCustForm.nama}
                           onChange={(e) => setNewCustForm({...newCustForm, nama: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs"
                           required
                         />
                       </div>
@@ -2004,7 +2091,7 @@ ${error.message}`);
                           placeholder="345,000 VA" 
                           value={newCustForm.daya}
                           onChange={(e) => setNewCustForm({...newCustForm, daya: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs font-sans"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-4 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs font-sans"
                           required
                         />
                       </div>
@@ -2016,7 +2103,7 @@ ${error.message}`);
                         <select 
                           value={newCustForm.tarif}
                           onChange={(e) => setNewCustForm({...newCustForm, tarif: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs font-semibold"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#0072CE] text-xs font-semibold"
                         >
                           <option value="I3/TM">I3/TM</option>
                           <option value="I4/TT">I4/TT</option>
@@ -2032,7 +2119,7 @@ ${error.message}`);
                           placeholder="S-PLG06" 
                           value={newCustForm.siteCode}
                           onChange={(e) => setNewCustForm({...newCustForm, siteCode: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-4 text-slate-800 focus:outline-none"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-4 text-slate-800 focus:outline-none"
                         />
                       </div>
 
@@ -2043,7 +2130,7 @@ ${error.message}`);
                           placeholder="Penyulang Demang" 
                           value={newCustForm.siteName}
                           onChange={(e) => setNewCustForm({...newCustForm, siteName: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-4 text-slate-800 focus:outline-none"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-4 text-slate-800 focus:outline-none"
                         />
                       </div>
 
@@ -2054,7 +2141,7 @@ ${error.message}`);
                           placeholder="-2.9912,104.7832" 
                           value={newCustForm.tikor}
                           onChange={(e) => setNewCustForm({...newCustForm, tikor: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-4 text-slate-800 focus:outline-none font-sans"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-4 text-slate-800 focus:outline-none font-sans"
                         />
                       </div>
                     </div>
@@ -2069,7 +2156,7 @@ ${error.message}`);
                               type="number"
                               value={newCustForm[m]}
                               onChange={(e) => setNewCustForm({...newCustForm, [m]: e.target.value})}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-slate-800 focus:outline-none font-sans text-xs"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-3 text-slate-800 focus:outline-none font-sans text-xs"
                             />
                           </div>
                         ))}
@@ -2078,7 +2165,7 @@ ${error.message}`);
 
                     <button 
                       type="submit"
-                      className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold py-2.5 rounded-lg transition"
+                      className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white font-semibold py-2.5 rounded-xl transition"
                     >
                       Daftarkan Pelanggan Baru ke Database
                     </button>
@@ -2088,7 +2175,7 @@ ${error.message}`);
 
               {/* TAB: ERROR LOG */}
               {activeTab === "Error Log" && (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)]">
                   <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                     <div>
                       <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
@@ -2130,7 +2217,7 @@ ${error.message}`);
                             <td className="py-3">
                               <button 
                                 onClick={() => handleAiErrorTroubleshoot(log)}
-                                className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 border border-[#0072CE]/20 text-[#0072CE] rounded-lg text-[10px] font-semibold transition flex items-center gap-1"
+                                className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 border border-[#00AEEF]/20 text-[#0072CE] rounded-xl text-[10px] font-semibold transition flex items-center gap-1"
                               >
                                 <Cpu size={10} /> Diagnosa AI
                               </button>
@@ -2147,7 +2234,7 @@ ${error.message}`);
               {activeTab === "Config & Roles" && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Parameter Config Form */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)] space-y-6">
                     <div>
                       <h2 className="text-md font-semibold text-slate-800 flex items-center gap-2">
                         <Settings className="text-[#0072CE]" size={18} />
@@ -2163,7 +2250,7 @@ ${error.message}`);
                           type="text" 
                           value={systemConfig.waEndpoint}
                           onChange={(e) => setSystemConfig({...systemConfig, waEndpoint: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-slate-800 focus:outline-none"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-800 focus:outline-none"
                         />
                       </div>
 
@@ -2173,7 +2260,7 @@ ${error.message}`);
                           type="password" 
                           value={systemConfig.apiKey}
                           onChange={(e) => setSystemConfig({...systemConfig, apiKey: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-slate-800 focus:outline-none font-sans"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-800 focus:outline-none font-sans"
                         />
                       </div>
 
@@ -2182,11 +2269,11 @@ ${error.message}`);
                         <textarea 
                           value={systemConfig.captionFormat}
                           onChange={(e) => setSystemConfig({...systemConfig, captionFormat: e.target.value})}
-                          className="w-full h-24 bg-slate-50 border border-slate-200 rounded-lg p-3 text-slate-800 focus:outline-none font-sans leading-relaxed"
+                          className="w-full h-24 bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 focus:outline-none font-sans leading-relaxed"
                         />
                       </div>
 
-                      <div className="flex justify-between items-center bg-slate-50 p-4 rounded-lg border border-slate-200">
+                      <div className="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200">
                         <div>
                           <p className="font-semibold text-slate-800 text-xs">Aktifkan AI Smart Assistant</p>
                           <span className="text-[10px] text-slate-500">Panggilan otomatis ke model Gemini</span>
@@ -2201,7 +2288,7 @@ ${error.message}`);
 
                       <button 
                         onClick={() => notify("Konfigurasi parameter berhasil diperbarui!", "success")}
-                        className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white py-2 rounded-lg font-semibold transition text-xs"
+                        className="w-full bg-[#0072CE] hover:bg-[#005ea8] text-white py-2 rounded-xl font-semibold transition text-xs"
                       >
                         Simpan Konfigurasi
                       </button>
@@ -2209,7 +2296,7 @@ ${error.message}`);
                   </div>
 
                   {/* Users and Roles Policy Info */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+                  <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)] space-y-6">
                     <div>
                       <h3 className="text-md font-semibold text-slate-800 flex items-center gap-2">
                         <Users className="text-[#0072CE]" size={16} />
@@ -2225,7 +2312,7 @@ ${error.message}`);
                         { role: "Operator", desc: "Wewenang melakukan update data manual, memicu kirim ulang grafik via WA, serta menggunakan simulator untuk memeriksa kepatuhan data AMR gardu.", color: "text-blue-600 border-blue-200" },
                         { role: "Viewer", desc: "Akses mode baca-saja. Dirancang bagi tingkatan manajemen PLN untuk memantau grafik kumulatif dan membaca evaluasi AI Smart Assistant.", color: "text-slate-600 border-slate-200" }
                       ].map((policy, i) => (
-                        <div key={i} className={`p-4 rounded-lg border bg-slate-50 space-y-1 ${policy.color}`}>
+                        <div key={i} className={`p-4 rounded-xl border bg-slate-50 space-y-1 ${policy.color}`}>
                           <span className="text-xs font-semibold uppercase">{policy.role}</span>
                           <p className="text-[11px] text-slate-600 leading-relaxed">{policy.desc}</p>
                         </div>
@@ -2237,7 +2324,7 @@ ${error.message}`);
 
               {/* TAB: BUKU PANDUAN */}
               {activeTab === "Buku Panduan" && (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+                <div className="bg-white/82 backdrop-blur-xl border border-white/70 rounded-2xl p-6 shadow-[0_14px_40px_rgba(0,114,206,0.10)] space-y-6">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 pb-4 gap-4">
                     <div>
                       <span className="text-[9px] bg-slate-100 text-[#0072CE] border border-slate-200 px-2.5 py-1 rounded font-semibold uppercase tracking-normal">DOKUMEN OPERASIONAL P4</span>
@@ -2250,7 +2337,7 @@ ${error.message}`);
 
                     <button 
                       onClick={() => notify("Mengekspor Buku Panduan ke PDF...", "success")}
-                      className="bg-white border border-slate-200 hover:bg-slate-50 text-[#0072CE] px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2"
+                      className="bg-white border border-slate-200 hover:bg-slate-50 text-[#0072CE] px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2"
                     >
                       <Download size={14} /> Cetak Buku Panduan (PDF)
                     </button>
@@ -2259,7 +2346,7 @@ ${error.message}`);
                   {/* Complete 10-Chapter Book Layout */}
                   <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     {/* Navigation Outline left */}
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1.5 h-[500px] overflow-y-auto">
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1.5 h-[500px] overflow-y-auto">
                       <span className="text-[10px] uppercase text-slate-500 font-semibold block mb-2 tracking-wider px-2">Daftar Isi Buku</span>
                       {[
                         "Bab 1: Pendahuluan",
@@ -2276,7 +2363,7 @@ ${error.message}`);
                         <a 
                           key={i} 
                           href={`#ch-${i+1}`}
-                          className="block text-[11px] font-semibold text-slate-600 hover:text-[#0072CE] px-3 py-1.5 rounded-lg hover:bg-white transition"
+                          className="block text-[11px] font-semibold text-slate-600 hover:text-[#0072CE] px-3 py-1.5 rounded-xl hover:bg-white transition"
                         >
                           {ch}
                         </a>
@@ -2287,7 +2374,7 @@ ${error.message}`);
                     <div className="lg:col-span-3 space-y-8 max-h-[500px] overflow-y-auto pr-4 select-text leading-relaxed text-xs text-slate-700">
                       
                       {/* BAB 1 */}
-                      <section id="ch-1" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-1" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 1: Pendahuluan</h3>
                         <p>
                           Sistem **MONA LISA** (Monthly Load Analysis & Smart Assistant) dirancang untuk memodernisasi infrastruktur pembacaan AMR (Automatic Meter Reading) di lingkungan PT PLN (Persero). Dokumen ini berfungsi sebagai panduan taktis operasional implementasi P4 untuk memastikan data konsumsi energi tervalidasi dengan baik.
@@ -2295,7 +2382,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 2 */}
-                      <section id="ch-2" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-2" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 2: Gambaran Umum MONA LISA P4</h3>
                         <p>
                           Pada versi P4, sistem mengkonsolidasikan empat pilar utama: API integrasi WhatsApp Gateway, dashboard pusat kendali operator, database terdistribusi AMR, serta korelasi analitik anomali berbasis model AI LLM.
@@ -2303,7 +2390,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 3 */}
-                      <section id="ch-3" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-3" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 3: Arsitektur & Desain Dashboard</h3>
                         <p>
                           Estetika dashboard dirancang bersih, terang, dan profesional dengan warna dasar abu-abu muda untuk kegunaan jangka panjang operator, berpadu dengan aksen biru korporat PLN.
@@ -2311,7 +2398,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 4 */}
-                      <section id="ch-4" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-4" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 4: Panduan Autentikasi Login</h3>
                         <p>
                           Setiap pengguna wajib memilih peran yang sesuai dengan hak operasinya. Autentikasi diproteksi dengan enkripsi password standar korporat.
@@ -2319,7 +2406,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 5 */}
-                      <section id="ch-5" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-5" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 5: Panduan Membaca Dashboard Utama</h3>
                         <p>
                           Gunakan panel indikator atas untuk memeriksa jumlah request masuk, status keaktifan server WA gateway, dan jumlah sisa data pelanggan yang belum tervalidasi lengkap (parsial).
@@ -2327,7 +2414,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 6 */}
-                      <section id="ch-6" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-6" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 6: Panduan Analisis Grafik Pemakaian</h3>
                         <p>
                           Grafik garis merepresentasikan fluktuasi konsumsi kWh pelanggan dari Januari hingga Desember. Jika data salah satu bulan berstatus null, grafik akan menampilkan penurunan tajam ke angka 0 untuk memberi peringatan visual instan.
@@ -2335,7 +2422,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 7 */}
-                      <section id="ch-7" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-7" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 7: SOP Pembaruan & Tambah Data via WhatsApp</h3>
                         <p>
                           Gunakan format ketat di bawah ini saat mengirim pesan dari WA:
@@ -2347,7 +2434,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 8 */}
-                      <section id="ch-8" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-8" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 8: Interpretasi AI Smart Assistant</h3>
                         <p>
                           AI Smart Assistant membaca metadata log error dan pemakaian listrik untuk merumuskan tren komersial dan menyarankan penggantian modem transmisi gardu bila dijumpai putus data berkala.
@@ -2355,7 +2442,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 9 */}
-                      <section id="ch-9" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-9" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 9: Penanganan Error Log & Troubleshooting</h3>
                         <p>
                           Jika dijumpai status kegagalan koneksi socket WhatsApp Gateway, operator wajib meninjau Error Log, memeriksa nomor Execution ID, dan merestart modul gateway pada tab Config.
@@ -2363,7 +2450,7 @@ ${error.message}`);
                       </section>
 
                       {/* BAB 10 */}
-                      <section id="ch-10" className="space-y-2 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <section id="ch-10" className="space-y-2 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <h3 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">Bab 10: Rangkuman & Saran Pengembangan</h3>
                         <p>
                           Disarankan untuk mengintegrasikan diagram fasor interaktif real-time ke dalam profil data pelanggan pada pengembangan MONA LISA fase berikutnya guna memperkuat pengawasan komersial.
@@ -2389,7 +2476,7 @@ ${error.message}`);
 
       {selectedErrorForAi && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-xl bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xl relative">
+          <div className="w-full max-w-xl bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xl relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-[#0072CE]"></div>
             <div className="p-6">
               <div className="flex justify-between items-start mb-4 border-b border-slate-100 pb-3">
@@ -2406,7 +2493,7 @@ ${error.message}`);
               </div>
 
               <div className="space-y-3 text-xs leading-relaxed text-slate-700">
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                   <p className="font-semibold text-red-600 font-sans mb-1">{selectedErrorForAi.message}</p>
                   <p className="text-[10px] text-slate-500">Penyebab Awal: {selectedErrorForAi.cause}</p>
                 </div>
@@ -2423,7 +2510,7 @@ ${error.message}`);
                       <div className="h-3 bg-slate-100 rounded animate-pulse w-5/6"></div>
                     </div>
                   ) : (
-                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 select-text font-sans text-slate-700 whitespace-pre-wrap leading-relaxed max-h-[250px] overflow-y-auto">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 select-text font-sans text-slate-700 whitespace-pre-wrap leading-relaxed max-h-[250px] overflow-y-auto">
                       {aiErrorFixSuggestion}
                     </div>
                   )}
@@ -2434,14 +2521,14 @@ ${error.message}`);
                 <button 
                   onClick={() => handleAiErrorTroubleshoot(selectedErrorForAi)}
                   disabled={isAiErrorLoading}
-                  className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition flex items-center gap-1.5"
+                  className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition flex items-center gap-1.5"
                 >
                   <RefreshCw size={12} className={isAiErrorLoading ? 'animate-spin' : ''} />
                   Minta Ulang Solusi
                 </button>
                 <button 
                   onClick={() => setSelectedErrorForAi(null)}
-                  className="px-4 py-2 bg-[#0072CE] hover:bg-[#005ea8] text-white rounded-lg text-xs font-semibold transition"
+                  className="px-4 py-2 bg-[#0072CE] hover:bg-[#005ea8] text-white rounded-xl text-xs font-semibold transition"
                 >
                   Selesai
                 </button>
