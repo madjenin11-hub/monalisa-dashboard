@@ -182,3 +182,114 @@
     border-right-color: var(--border);
   }
 }
+
+/* ================================
+   MONA LISA PLN Illustrative Theme
+   ================================ */
+:root {
+  --pln-navy: #061A33;
+  --pln-blue: #0072CE;
+  --pln-cyan: #00AEEF;
+  --pln-yellow: #FFD100;
+  --pln-ink: #0B1F3A;
+}
+
+.monalisa-energy-bg {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(0, 174, 239, 0.18), transparent 28%),
+    radial-gradient(circle at 84% 8%, rgba(255, 209, 0, 0.16), transparent 22%),
+    radial-gradient(circle at 76% 84%, rgba(0, 114, 206, 0.14), transparent 30%),
+    linear-gradient(135deg, #EEF7FF 0%, #F8FBFF 45%, #E9F6FF 100%);
+}
+
+.monalisa-grid-pattern {
+  background-image:
+    linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at center, black, transparent 78%);
+}
+
+.monalisa-hover-lift {
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.monalisa-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 60px rgba(0, 114, 206, .16);
+  border-color: rgba(0, 174, 239, .42);
+}
+
+.monalisa-fade-up { animation: monalisaFadeUp .55s ease both; }
+.monalisa-float { animation: monalisaFloat 7s ease-in-out infinite; }
+.monalisa-float-reverse { animation: monalisaFloatReverse 8s ease-in-out infinite; }
+.monalisa-orbit { animation: monalisaOrbit 14s linear infinite; }
+.monalisa-pulse-soft { animation: monalisaPulseSoft 2.6s ease-in-out infinite; }
+.monalisa-draw {
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: monalisaDraw 1.55s ease forwards;
+}
+
+@keyframes monalisaFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes monalisaFloat {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(-16px,14px,0) scale(1.05); }
+}
+@keyframes monalisaFloatReverse {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(12px,-10px,0) scale(1.04); }
+}
+@keyframes monalisaOrbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes monalisaPulseSoft {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(255,209,0,0)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 14px rgba(255,209,0,.45)); transform: scale(1.03); }
+}
+@keyframes monalisaDraw { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .monalisa-fade-up,
+  .monalisa-float,
+  .monalisa-float-reverse,
+  .monalisa-orbit,
+  .monalisa-pulse-soft,
+  .monalisa-draw {
+    animation: none !important;
+  }
+}
+
+/* ================================
+   MONA LISA Animation Stabilizer
+   Mengurangi efek kedip-kedip pada logo, grafik, dan hero visual
+   ================================ */
+
+.monalisa-orbit,
+.monalisa-pulse-soft,
+.monalisa-draw {
+  animation: none !important;
+}
+
+.monalisa-float,
+.monalisa-float-reverse {
+  animation-duration: 12s !important;
+  animation-timing-function: ease-in-out !important;
+}
+
+.monalisa-hover-lift {
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.monalisa-hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Agar logo dan ikon tidak flicker saat loading */
+img {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
